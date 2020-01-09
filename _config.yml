@@ -1,3 +1,23 @@
 remote_theme: "mmistakes/minimal-mistakes@4.17.2"
 plugins:
   - jekyll-include-cache
+github: [metadata]
+
+include: 
+  - "_pages"
+
+# Defaults
+defaults:
+  # _pages
+  - scope:
+      path: "_pages"
+      type: pages
+    values:
+      layout: single  
+      permalink: /:basename
+
+title: Kurren and Heena's Wedding
+
+sass:
+  sass_dir: _sass
+  style: compressed

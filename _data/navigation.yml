@@ -1,0 +1,11 @@
+main:  
+  - title: "RSVP"
+    url: /rsvp
+  - title: "Chunni Sagan"
+    url: /chunni-sagan
+  - title: "Civil Ceremony"
+    url: /civil-ceremony
+  - title: "Hindu Ceremony"
+    url: /hindu-ceremony
+  - title: "Reception"
+    url: /reception
