@@ -13,3 +13,30 @@ $header-font-family: $serif;
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials 
 
+.tile-text {
+    position: absolute;
+    white-space: nowrap;
+    color: #4d4d4d;    
+    border-bottom: none !important;
+    margin: 0;
+    padding: 0 !important;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, .7);
+    overflow: hidden;
+    width: 0;
+    height: 100%;
+    transition: .5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container:hover .overlay {
+    width: 100%;
+}
