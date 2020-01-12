@@ -18,31 +18,21 @@
       <div class="archive__item">
 
         {% if f.image_path %}
-          <a href="{{ f.url }}">        
+          <a href="{{ f.url }}" style="text-decoration:none;">        
             <div class="archive__item-teaser container">   
 
-              <div class="overlay">
-                <h2 class="tile-text">{{ f.title }}</h2>
-              </div>
-            
               <img class="tile_image" src=
                 {% if f.image_path contains "://" %}
                   "{{ f.image_path }}"
                 {% else %}
                   "{{ f.image_path | relative_url }}"
                 {% endif %}
-              alt="{% if f.alt %}{{ f.alt }}{% endif %}">    
+                alt="{% if f.alt %}{{ f.alt }}{% endif %}">    
 
+                <h2 class="tile-text">{{ f.title }}</h2>
             </div>
           </a>
         {% endif %}
-
-        <div class="archive__item-body">
-
-          {% if f.url %}
-            <p><a href="{{ f_url }}" class="btn {{ f.btn_class }}"></a></p>
-          {% endif %}
-        </div>
       </div>
     </div>
   {% endfor %}

@@ -23,6 +23,4 @@ feature_row:
     url: "/reception"
 ---
 
-<h1>Events</h1>
-
 {% include feature_row.liquid %}
