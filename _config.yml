@@ -21,3 +21,6 @@ title: Kurren and Heena's Wedding
 sass:
   sass_dir: _sass
   style: compressed
+
+footer_scripts:
+  - /assets/js/load.js
