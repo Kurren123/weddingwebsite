@@ -1,40 +1,60 @@
-// TODO: compare lowercase email in login screen and show "unsupported browser" message for IE
+// TODO: 1. Add classes in html matching the translation values below, eg "chunniSagan", to have them show/hide based on permissions
+//  2. Show "unsupported browser" message for IE
 
-var email, guests;
-email = localStorage.getItem('email');
 
 async function load() {
     // first get the guest list. Try session storage first.
+    var email, guests;
     guests = sessionStorage.getItem('guests');
-    if (guests == null) {
+    if (guests) {
+        guests = JSON.parse(guests);
+    } else {
         var guestsCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTny8qvPDcrGqPOxeHYIBJKJ2tbkkNCINWy3pdHhHzt12igcxjNeX6dcHscGETDBnWlrTCOhVILEcRS/pub?gid=0&single=true&output=csv';
         var guestsStr = await makeRequest('GET', guestsCsvUrl);
         guests = parseCsv(guestsStr);
         sessionStorage.setItem('guests', JSON.stringify(guests));
-    } else {
-        guests = JSON.parse(guests);
     }
 
-    if (email != null) {
-        // show login screen and get the email
+    email = localStorage.getItem('email');
+    if (email) {
+        showWebsite(email, guests);
     } else {
-        showWebsite();
+        // show login screen and get the email
+        document.getElementById('login_submit').addEventListener('click', () => login(guests));
+        displayId('loading', false);
+        displayId('login', true);
     }
 }
 
-function showWebsite() {
-    function display(id, show) {
-        var e = document.getElementById(id);
-        if (show) {
-            e.classList.remove("hide");
-        } else {
-            e.classList.add("hide")
-        }
+function login(guests) {
+    email = document.getElementById('field_email').value;
+    if (email && guests[email.toLowerCase()]) {
+        localStorage.setItem('email', email);
+        showWebsite(email, guests);
+    } else {
+        displayId('email_not_found', true);
     }
-    display("mainContent", true);
-    display("loading", false);
-    display("login", false);
-    // also show/hide stuff based on the permissions in guests
+}
+
+function showWebsite(email, guests) {
+
+    displayId("mainContent", true);
+    displayId("loading", false);
+    displayId("login", false);
+
+    // show/hide stuff based on the permissions in guests
+    Object.keys(translations).forEach(k => {
+        var weddingEvent = translations[k];
+        // if any guest under this email is invited to the event, show the page.
+        var invited = guests[email].some(g => {
+            try {
+                return g[weddingEvent].toUpperCase().trim() == "TRUE";
+            } catch {
+                return false;
+            }
+        })
+        displayCls(weddingEvent, invited);
+    })
 }
 
 function makeRequest(method, url) {
@@ -61,17 +81,19 @@ function makeRequest(method, url) {
     });
 }
 
+var translations = {
+    'Email': "email",
+    'Invited to Boys Haldi': "boysHaldi",
+    'Invited to chunni sagan': "chunniSagan",
+    'Invited to civil': "civil",
+    'Invited to mehndi': "mehndi",
+    'Invited to reception': "reception",
+    'Invited to temple': "temple",
+    'Name': "name"
+}
+
 function parseCsv(input) {
-    var translations = {
-        'Email': "email",
-        'Invited to Boys Haldi': "boysHaldi",
-        'Invited to chunni sagan': "chunniSagan",
-        'Invited to civil': "civil",
-        'Invited to mehndi': "mehndi",
-        'Invited to reception': "reception",
-        'Invited to temple': "temple",
-        'Name': "name"
-    }
+
 
     lines = input.split('\n');
     fields = lines[0].split(',');
@@ -97,6 +119,26 @@ function parseCsv(input) {
         resultDict[g.email].push(g);
     })
     return resultDict;
+}
+
+function display(el, show) {
+    if (show) {
+        el.classList.remove("hide");
+    } else {
+        el.classList.add("hide")
+    }
+}
+
+function displayId(id, show) {
+    var e = document.getElementById(id);
+    display(e, show);
+}
+
+function displayCls(cls, show) {
+    var es = document.getElementsByClassName(cls);
+    for (i = 0; i < es.length; i++) {
+        display(es.item(i), show);
+    }
 }
 
 load();

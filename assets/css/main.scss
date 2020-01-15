@@ -20,7 +20,7 @@ $header-font-family: $serif;
     padding: 0 !important;
 }
 
-.hide { display: none; }
+.hide { display: none !important; }
 
 #login{
     z-index: 30;
