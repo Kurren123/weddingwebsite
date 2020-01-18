@@ -1,6 +1,5 @@
-// TODO: 1. Add classes in html matching the translation values below, eg "chunniSagan", to have them show/hide based on permissions
-//  2. Show "unsupported browser" message for IE
-
+// TODO: 1. make the RSVP form
+// 2. Do the images on the home page, move on to website content
 
 async function load() {
     // first get the guest list. Try session storage first.
@@ -9,6 +8,7 @@ async function load() {
     if (guests) {
         guests = JSON.parse(guests);
     } else {
+        displayId('loading', true);
         var guestsCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTny8qvPDcrGqPOxeHYIBJKJ2tbkkNCINWy3pdHhHzt12igcxjNeX6dcHscGETDBnWlrTCOhVILEcRS/pub?gid=0&single=true&output=csv';
         var guestsStr = await makeRequest('GET', guestsCsvUrl);
         guests = parseCsv(guestsStr);
@@ -39,22 +39,30 @@ function login(guests) {
 function showWebsite(email, guests) {
 
     displayId("mainContent", true);
-    displayId("loading", false);
-    displayId("login", false);
+
+    function removeElements(className) {
+        let els = document.getElementsByClassName(className);
+        while (els.length > 0) {
+            els[0].remove();
+        }
+    }
 
     // show/hide stuff based on the permissions in guests
     Object.keys(translations).forEach(k => {
         var weddingEvent = translations[k];
         // if any guest under this email is invited to the event, show the page.
-        var invited = guests[email].some(g => {
+        var invited = guests[email.trim().toLowerCase()].some(g => {
             try {
                 return g[weddingEvent].toUpperCase().trim() == "TRUE";
             } catch {
                 return false;
             }
         })
-        displayCls(weddingEvent, invited);
+        if (!invited) { removeElements(weddingEvent); }
     })
+
+    displayId("loading", false);
+    displayId("login", false);
 }
 
 function makeRequest(method, url) {
@@ -114,9 +122,9 @@ function parseCsv(input) {
 
     var resultDict = {};
     result.forEach(g => {
-        if (resultDict[g.email] == undefined) { resultDict[g.email] = []; }
-
-        resultDict[g.email].push(g);
+        var trimmedEmail = g.email.trim().toLowerCase()
+        if (resultDict[trimmedEmail] == undefined) { resultDict[trimmedEmail] = []; }
+        resultDict[trimmedEmail].push(g);
     })
     return resultDict;
 }
@@ -141,4 +149,18 @@ function displayCls(cls, show) {
     }
 }
 
-load();
+function isIE() {
+    var ua = window.navigator.userAgent; //Check the userAgent property of the window.navigator object
+    var msie = ua.indexOf('MSIE '); // IE 10 or older
+    var trident = ua.indexOf('Trident/'); //IE 11
+
+    return (msie > 0 || trident > 0);
+}
+
+if (isIE()) {
+    displayId("loading", false);
+    displayId("login", false);
+    displayId("notSupported", true);
+} else {
+    load();
+}

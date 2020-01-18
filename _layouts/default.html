@@ -17,6 +17,7 @@
 
 <body
   class="layout--{{ page.layout | default: layout.layout }}{% if page.classes or layout.classes %}{{ page.classes | default: layout.classes | join: ' ' | prepend: ' ' }}{% endif %}">
+  {% include upgrade-browser.html %}
   {% include login.html %}
   {% include loading.html %}
   <div id="mainContent" class="hide">
