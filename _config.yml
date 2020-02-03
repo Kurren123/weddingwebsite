@@ -22,5 +22,5 @@ sass:
   sass_dir: _sass
   style: compressed
 
-footer_scripts:
+after_footer_scripts:
   - /assets/js/load.js
