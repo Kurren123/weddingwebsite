@@ -24,3 +24,6 @@ sass:
 
 after_footer_scripts:
   - /assets/js/load.js
+
+exclude:
+  - /rsvp-form  
