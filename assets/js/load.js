@@ -91,7 +91,7 @@ function makeRequest(method, url) {
 
 var translations = {
     'Email': "email",
-    'Invited to Boys Haldi': "boysHaldi",
+    'Invited to Boys Haldi': "haldi",
     'Invited to chunni sagan': "chunniSagan",
     'Invited to civil': "civil",
     'Invited to mehndi': "mehndi",
